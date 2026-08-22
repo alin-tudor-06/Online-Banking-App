@@ -2,58 +2,75 @@ package com.alin.banking.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
-public class Account {
+@Table(name = "accounts")
+public class Account{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true,nullable = false)
+    private String accountNumber;
 
-    private String numar_cont;
+    @Column(precision = 19,scale = 2,nullable = false)
+    private BigDecimal balance;
 
-    private String nume_detinator;
+    @Column(nullable = false)
+    private String currency;
 
-    private Double balanta;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
 
-    public Account() {}
+    public Account(){}
 
-    public Account(String numar_cont, String nume_detinator, Double balanta) {
-        this.numar_cont = numar_cont;
-        this.nume_detinator=nume_detinator;
-        this.balanta=balanta;
+    public Account(String accountNumber,BigDecimal balance,String currency,User user){
+        this.accountNumber=accountNumber;
+        this.balance=balance;
+        this.currency=currency;
+        this.user=user;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getNumar_cont() {
-        return numar_cont;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public String getNume_detinator() {
-        return nume_detinator;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public Double getBalanta() {
-        return balanta;
+    public String getCurrency() {
+        return currency;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setNumar_cont(String numar_cont) {
-        this.numar_cont = numar_cont;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
-    public void setNume_detinator(String nume_detinator) {
-        this.nume_detinator = nume_detinator;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
-    public void setBalanta(Double balanta) {
-        this.balanta = balanta;
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
-

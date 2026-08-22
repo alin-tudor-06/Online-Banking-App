@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -14,10 +15,13 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping
-    public Account createAccount(@RequestParam String numar_cont,
-                                 @RequestParam String nume_detinator,
-                                 @RequestParam Double balanta){
-        return accountService.createAccount(numar_cont,nume_detinator,balanta);
+    public Account createAccount(@RequestBody Map<String,String> request){
+        String firstName = request.get("firstName");
+        String lastName = request.get("lastName");
+        String cnp = request.get("cnp");
+        String email = request.get("email");
+        String address = request.get("address");
+        return accountService.createAccount(firstName,lastName,cnp,email,address);
     }
 
     @GetMapping
