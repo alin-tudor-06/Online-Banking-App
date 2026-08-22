@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alin.banking.model.User;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
@@ -22,5 +24,21 @@ public class UserService {
 
     public User findById(Long id){
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilizatorul cu ID-ul " + id + " nu a fost gasit"));
+    }
+
+    public List<User> findAllUsers(){
+        return userRepository.findAll();
+    }
+
+    public User updateUser(Long id,String new_email,String new_address){
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilizatorul cu ID-ul " + id + " nu exista"));
+        if(new_email != null) user.setEmail(new_email);
+        if(new_address != null) user.setAddress(new_address);
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilizatorul cu ID-ul " + id + " nu exista"));
+        userRepository.delete(user);
     }
 }
