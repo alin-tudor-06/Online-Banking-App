@@ -31,4 +31,9 @@ public class AccountController {
     public AccountResponseDTO getAccountById(@PathVariable Long id){
         return accountService.getAccountById(id);
     }
+
+    @GetMapping("/number/{accountnumber}")
+    public AccountResponseDTO getAccountByAccountNumber(@PathVariable String accountnumber){
+        return accountService.getAccountByAccountNumber(accountnumber);
+    }
 }

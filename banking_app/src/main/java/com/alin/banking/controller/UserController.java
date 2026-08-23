@@ -35,6 +35,11 @@ public class UserController {
         return userService.findByCnp(cnp);
     }
 
+    @GetMapping("/by-name")
+    public List<UserResponseDTO> findByFirstAndLastName(@RequestParam String firstName,@RequestParam String lastName){
+        return userService.findByFirstAndLastName(firstName,lastName);
+    }
+
     @PutMapping("/{id}")
     public UserResponseDTO updateUser(@PathVariable Long id,@RequestBody Map<String,String> request){
         String email = request.get("email");

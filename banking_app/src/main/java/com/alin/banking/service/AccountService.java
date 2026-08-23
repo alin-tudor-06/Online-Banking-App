@@ -59,4 +59,9 @@ public class AccountService {
         Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Contul cu ID-ul " + id + " nu a fost gasit"));
         return convertToDto(account);
     }
+
+    public AccountResponseDTO getAccountByAccountNumber(String accountnumber){
+        Account account = accountRepository.findByAccountNumber(accountnumber).orElseThrow(() -> new RuntimeException("Contul cu numarul " + accountnumber + " nu a fost gasit"));
+        return convertToDto(account);
+    }
 }

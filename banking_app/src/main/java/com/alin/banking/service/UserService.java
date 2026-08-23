@@ -60,6 +60,10 @@ public class UserService {
         return convertToDto(user);
     }
 
+    public List<UserResponseDTO> findByFirstAndLastName(String firstName,String lastName){
+        return userRepository.findByFirstNameAndLastName(firstName,lastName).stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
     public List<UserResponseDTO> findAllUsers(){
         return userRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
