@@ -1,7 +1,10 @@
 package com.alin.banking.controller;
 
+import com.alin.banking.dto.AccountResponseDTO;
+import com.alin.banking.dto.UserCreateDTO;
 import com.alin.banking.model.Account;
 import com.alin.banking.service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,22 +18,17 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping
-    public Account createAccount(@RequestBody Map<String,String> request){
-        String firstName = request.get("firstName");
-        String lastName = request.get("lastName");
-        String cnp = request.get("cnp");
-        String email = request.get("email");
-        String address = request.get("address");
-        return accountService.createAccount(firstName,lastName,cnp,email,address);
+    public AccountResponseDTO createAccount(@Valid @RequestBody UserCreateDTO dto){
+        return accountService.createAccount(dto);
     }
 
     @GetMapping
-    public List<Account> getAllAccounts(){
+    public List<AccountResponseDTO> getAllAccounts(){
         return accountService.getAllAccounts();
     }
 
     @GetMapping("/{id}")
-    public Account getAccountById(@PathVariable Long id){
+    public AccountResponseDTO getAccountById(@PathVariable Long id){
         return accountService.getAccountById(id);
     }
 }

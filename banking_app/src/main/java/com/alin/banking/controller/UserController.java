@@ -1,7 +1,10 @@
 package com.alin.banking.controller;
 
+import com.alin.banking.dto.UserCreateDTO;
+import com.alin.banking.dto.UserResponseDTO;
 import com.alin.banking.model.User;
 import com.alin.banking.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,30 +18,25 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody Map<String,String> request){
-        String firstName = request.get("firstName");
-        String lastName = request.get("lastName");
-        String cnp = request.get("cnp");
-        String email = request.get("email");
-        String address = request.get("address");
-        return userService.createUser(firstName,lastName,cnp,email,address);
+    public UserResponseDTO createUser(@Valid @RequestBody UserCreateDTO dto){
+        return userService.createUser(dto);
     }
 
     @GetMapping
-    public List<User> findAllUsers(){ return userService.findAllUsers();}
+    public List<UserResponseDTO> findAllUsers(){ return userService.findAllUsers();}
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable Long id){
+    public UserResponseDTO findById(@PathVariable Long id){
         return userService.findById(id);
     }
 
     @GetMapping("/cnp/{cnp}")
-    public User findByCnp(@PathVariable String cnp){
+    public UserResponseDTO findByCnp(@PathVariable String cnp){
         return userService.findByCnp(cnp);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id,@RequestBody Map<String,String> request){
+    public UserResponseDTO updateUser(@PathVariable Long id,@RequestBody Map<String,String> request){
         String email = request.get("email");
         String address =  request.get("address");
         return userService.updateUser(id,email,address);
