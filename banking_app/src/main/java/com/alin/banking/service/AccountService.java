@@ -38,6 +38,10 @@ public class AccountService {
         );
     }
 
+    public Account findAccountByNumber(String accountNumber){
+        return accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new RuntimeException("Contul cu numarul " + accountNumber + " nu a fost gasit"));
+    }
+
     public AccountResponseDTO createAccount(UserCreateDTO dto) {
         User user;
         try {
