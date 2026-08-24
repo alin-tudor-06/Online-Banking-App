@@ -59,13 +59,16 @@ public class AccountService {
         return accountRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    public AccountResponseDTO getAccountById(Long id){
-        Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Contul cu ID-ul " + id + " nu a fost gasit"));
-        return convertToDto(account);
-    }
-
     public AccountResponseDTO getAccountByAccountNumber(String accountnumber){
         Account account = accountRepository.findByAccountNumber(accountnumber).orElseThrow(() -> new RuntimeException("Contul cu numarul " + accountnumber + " nu a fost gasit"));
         return convertToDto(account);
+    }
+
+    public void deleteAccount(String accountNumber){
+        Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new RuntimeException("Contul cu IBAN-ul " + accountNumber + " nu a fost gasit"));
+        if(account.getBalance().compareTo(BigDecimal.ZERO) != 0){
+            throw new RuntimeException("Contul nu poate fi șters deoarece are sold pozitiv");
+        }
+        accountRepository.delete(account);
     }
 }

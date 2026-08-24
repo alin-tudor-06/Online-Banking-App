@@ -25,11 +25,6 @@ public class UserController {
     @GetMapping
     public List<UserResponseDTO> findAllUsers(){ return userService.findAllUsers();}
 
-    @GetMapping("/{id}")
-    public UserResponseDTO findById(@PathVariable Long id){
-        return userService.findById(id);
-    }
-
     @GetMapping("/cnp/{cnp}")
     public UserResponseDTO findByCnp(@PathVariable String cnp){
         return userService.findByCnp(cnp);
@@ -40,16 +35,16 @@ public class UserController {
         return userService.findByFirstAndLastName(firstName,lastName);
     }
 
-    @PutMapping("/{id}")
-    public UserResponseDTO updateUser(@PathVariable Long id,@RequestBody Map<String,String> request){
+    @PutMapping("/{cnp}")
+    public UserResponseDTO updateUser(@PathVariable String cnp,@RequestBody Map<String,String> request){
         String email = request.get("email");
         String address =  request.get("address");
-        return userService.updateUser(id,email,address);
+        return userService.updateUser(cnp,email,address);
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long id){
-        userService.deleteUser(id);
+    @DeleteMapping("/{cnp}")
+    public String deleteUser(@PathVariable String cnp){
+        userService.deleteUser(cnp);
         return "Utilizatorul a fost sters";
     }
 }

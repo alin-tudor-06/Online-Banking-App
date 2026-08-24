@@ -27,13 +27,14 @@ public class AccountController {
         return accountService.getAllAccounts();
     }
 
-    @GetMapping("/{id}")
-    public AccountResponseDTO getAccountById(@PathVariable Long id){
-        return accountService.getAccountById(id);
-    }
-
     @GetMapping("/number/{accountnumber}")
     public AccountResponseDTO getAccountByAccountNumber(@PathVariable String accountnumber){
         return accountService.getAccountByAccountNumber(accountnumber);
+    }
+
+    @DeleteMapping("/{accountNumber}")
+    public String deleteAccount(@PathVariable String accountNumber){
+         accountService.deleteAccount(accountNumber);
+         return "Contul a fost sters";
     }
 }

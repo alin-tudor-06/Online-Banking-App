@@ -55,11 +55,6 @@ public class UserService {
         return convertToDto(user);
     }
 
-    public UserResponseDTO findById(Long id){
-        User user =  userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilizatorul cu ID-ul " + id + " nu a fost gasit"));
-        return convertToDto(user);
-    }
-
     public List<UserResponseDTO> findByFirstAndLastName(String firstName,String lastName){
         return userRepository.findByFirstNameAndLastName(firstName,lastName).stream().map(this::convertToDto).collect(Collectors.toList());
     }
@@ -68,16 +63,16 @@ public class UserService {
         return userRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    public UserResponseDTO updateUser(Long id,String new_email,String new_address){
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilizatorul cu ID-ul " + id + " nu exista"));
+    public UserResponseDTO updateUser(String cnp,String new_email,String new_address){
+        User user = userRepository.findByCnp(cnp).orElseThrow(() -> new RuntimeException("Utilizatorul cu CNP-ul " + cnp + " nu exista"));
         if(new_email != null) user.setEmail(new_email);
         if(new_address != null) user.setAddress(new_address);
         userRepository.save(user);
         return convertToDto(user);
     }
 
-    public void deleteUser(Long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilizatorul cu ID-ul " + id + " nu exista"));
+    public void deleteUser(String cnp){
+        User user = userRepository.findByCnp(cnp).orElseThrow(() -> new RuntimeException("Utilizatorul cu CNP-ul " + cnp + " nu exista"));
         userRepository.delete(user);
     }
 }
