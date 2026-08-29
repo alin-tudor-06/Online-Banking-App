@@ -28,7 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Autentificare",description = "Inregistrare si autentificare utilizatori")
+@Tag(name = "Authentication", description = "User registration and authentication")
 public class AuthController {
     @Autowired
     UserRepository userRepository;
@@ -42,7 +42,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @Operation(summary = "Inregistrare utilizator nou")
+    @Operation(summary = "Register a new user")
     @PostMapping("/register")
     public UserResponseDTO register(@Valid @RequestBody RegisterRequest request){
 
@@ -56,7 +56,7 @@ public class AuthController {
         return new UserResponseDTO(user.getFirstName(),user.getLastName(),user.getEmail(),user.getAddress());
     }
 
-    @Operation(summary = "Autentificare utilizator nou si returnare token JWT")
+    @Operation(summary = "Authenticate user and return JWT token")
     @PostMapping("/login")
     public JwtResponse login(@Valid @RequestBody LoginRequest request){
         try {

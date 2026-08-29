@@ -13,37 +13,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
-@Tag(name = "Tranzactii",description = "Operatiuni pentru tranzactii bancare(depunere,retragere,transfer,istoric)")
+@Tag(name = "Transactions", description = "Banking transaction operations (deposit, withdraw, transfer, history)")
 public class TransactionController {
 
     @Autowired
     TransactionService transactionService;
 
-    @Operation(summary = "Depune bani intr-un cont(doar proprietar sau ADMIN)")
+    @Operation(summary = "Deposit money into an account (owner or ADMIN)")
     @PostMapping("/deposit")
     public TransactionResponseDTO deposit(@Valid @RequestBody TransactionRequestDTO dto){
         return transactionService.deposit(dto);
     }
 
-    @Operation(summary = "Retrage bani dintr-un cont(doar proprietar sau ADMIN)")
+    @Operation(summary = "Withdraw money from an account (owner or ADMIN)")
     @PostMapping("/withdraw")
     public TransactionResponseDTO withdraw(@Valid @RequestBody TransactionRequestDTO dto){
         return transactionService.withdraw(dto);
     }
 
-    @Operation(summary = "Transfera bani intre doua conturi(doar proprietarul contului sursa sau ADMIN)")
+    @Operation(summary = "Transfer money between accounts (source account owner or ADMIN)")
     @PostMapping("/transfer")
     public  TransactionResponseDTO transfer(@Valid @RequestBody TransactionRequestDTO dto){
         return transactionService.transfer(dto);
     }
 
-    @Operation(summary = "Returneaza istoricul tranzactiilor pentru un cont(doar proprietar sau ADMIN)")
+    @Operation(summary = "Get transaction history for an account (owner or ADMIN)")
     @GetMapping("/account/{accountNumber}")
     public List<TransactionResponseDTO> transactionHistory(@PathVariable String accountNumber){
         return transactionService.getTransactionHistory(accountNumber);
     }
 
-    @Operation(summary = "Listeaza toate tranzactiile din sistem(doar ADMIN)")
+    @Operation(summary = "List all transactions in the system (ADMIN only)")
     @GetMapping("/admin/all")
     public List<TransactionResponseDTO> getAllTransactionsForAdmin(){
         return transactionService.getAllTransactionsForAdmin();

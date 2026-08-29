@@ -15,34 +15,34 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/accounts")
-@Tag(name = "Conturi",description = "Operatiuni pentru gestionarea conturilor bancare")
+@Tag(name = "Accounts", description = "Bank account management operations")
 public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @Operation(summary = "Creeaza un cont nou pentru utilizatorul autentificat")
+    @Operation(summary = "Create a new account for the authenticated user")
     @PostMapping
     public AccountResponseDTO createAccount(){
         return accountService.createAccount();
     }
 
-    @Operation(summary = "Listeaza toate conturile utilizatorului autentificat")
+    @Operation(summary = "List all accounts of the authenticated user")
     @GetMapping
     public List<AccountResponseDTO> getAllAccounts(){
         return accountService.getAllAccounts();
     }
 
-    @Operation(summary = "Cauta un cont dupa numarul IBAN (propriu sau ADMIN)")
+    @Operation(summary = "Find account by IBAN number(own or ADMIN")
     @GetMapping("/number/{accountnumber}")
     public AccountResponseDTO getAccountByAccountNumber(@PathVariable String accountnumber){
         return accountService.getAccountByAccountNumber(accountnumber);
     }
 
-    @Operation(summary = "Listeaza toate conturile din sistem(doar ADMIN)")
+    @Operation(summary = "List all accounts in the system (ADMIN only)")
     @GetMapping("/admin/all")
     public List<AccountResponseDTO> getAllAccountsForAdmin(){return accountService.getAllAccountsForAdmin();}
 
-    @Operation(summary = "Sterge un cont(doar daca soldul este 0 si utilizatorul este proprietar sau ADMIN)")
+    @Operation(summary = "Delete an account (balance 0, owner or ADMIN)")
     @DeleteMapping("/{accountNumber}")
     public String deleteAccount(@PathVariable String accountNumber){
          accountService.deleteAccount(accountNumber);

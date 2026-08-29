@@ -15,28 +15,28 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/users")
-@Tag(name = "Utilizatori",description = "Operatiuni pentru gestionarea utilizatorilor")
+@Tag(name = "Users", description = "User management operations")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "Listeaza toti utilizatorii(doar ADMIN)")
+    @Operation(summary = "List all users (ADMIN only)")
     @GetMapping("/admin/all")
     public List<UserResponseDTO> findAllUsers(){ return userService.findAllUsers();}
 
-    @Operation(summary = "Caută un utilizator după CNP (propriu sau ADMIN)")
+    @Operation(summary = "Find user by CNP (own or ADMIN)")
     @GetMapping("/cnp/{cnp}")
     public UserResponseDTO findByCnp(@PathVariable String cnp){
         return userService.findByCnp(cnp);
     }
 
-    @Operation(summary = "Caută utilizatori după nume și prenume(doar ADMIN)")
+    @Operation(summary = "Search users by first and last name(ADMIN only")
     @GetMapping("/by-name")
     public List<UserResponseDTO> findByFirstAndLastName(@RequestParam String firstName,@RequestParam String lastName){
         return userService.findByFirstAndLastName(firstName,lastName);
     }
 
-    @Operation(summary = "Actualizează email-ul și/sau adresa unui utilizator (propriu sau ADMIN)")
+    @Operation(summary = "Update email and/or address (own or ADMIN)")
     @PutMapping("/{cnp}")
     public UserResponseDTO updateUser(@PathVariable String cnp,@RequestBody Map<String,String> request){
         String email = request.get("email");
@@ -44,7 +44,7 @@ public class UserController {
         return userService.updateUser(cnp,email,address);
     }
 
-    @Operation(summary = "Șterge un utilizator (propriu sau ADMIN)")
+    @Operation(summary = "Delete a user (own or ADMIN)")
     @DeleteMapping("/{cnp}")
     public String deleteUser(@PathVariable String cnp){
         userService.deleteUser(cnp);
