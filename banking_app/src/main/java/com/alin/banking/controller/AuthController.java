@@ -8,6 +8,8 @@ import com.alin.banking.model.Role;
 import com.alin.banking.model.User;
 import com.alin.banking.repository.UserRepository;
 import com.alin.banking.security.JwtUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Autentificare",description = "Inregistrare si autentificare utilizatori")
 public class AuthController {
     @Autowired
     UserRepository userRepository;
@@ -39,6 +42,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Operation(summary = "Inregistrare utilizator nou")
     @PostMapping("/register")
     public UserResponseDTO register(@Valid @RequestBody RegisterRequest request){
 
@@ -52,6 +56,7 @@ public class AuthController {
         return new UserResponseDTO(user.getFirstName(),user.getLastName(),user.getEmail(),user.getAddress());
     }
 
+    @Operation(summary = "Autentificare utilizator nou si returnare token JWT")
     @PostMapping("/login")
     public JwtResponse login(@Valid @RequestBody LoginRequest request){
         try {
