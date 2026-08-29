@@ -18,8 +18,8 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping
-    public AccountResponseDTO createAccount(@Valid @RequestBody UserCreateDTO dto){
-        return accountService.createAccount(dto);
+    public AccountResponseDTO createAccount(){
+        return accountService.createAccount();
     }
 
     @GetMapping
@@ -31,6 +31,9 @@ public class AccountController {
     public AccountResponseDTO getAccountByAccountNumber(@PathVariable String accountnumber){
         return accountService.getAccountByAccountNumber(accountnumber);
     }
+
+    @GetMapping("/admin/all")
+    public List<AccountResponseDTO> getAllAccountsForAdmin(){return accountService.getAllAccountsForAdmin();}
 
     @DeleteMapping("/{accountNumber}")
     public String deleteAccount(@PathVariable String accountNumber){

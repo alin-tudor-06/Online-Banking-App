@@ -2,14 +2,15 @@ package com.alin.banking.service;
 
 import com.alin.banking.dto.TransactionRequestDTO;
 import com.alin.banking.dto.TransactionResponseDTO;
-import com.alin.banking.model.Account;
-import com.alin.banking.model.Transaction;
-import com.alin.banking.model.TransactionStatus;
-import com.alin.banking.model.TransactionType;
+import com.alin.banking.model.*;
 import com.alin.banking.repository.AccountRepository;
 import com.alin.banking.repository.TransactionRepository;
-import jakarta.transaction.Transactional;
+import com.alin.banking.security.CustomUserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +47,23 @@ public class TransactionService {
         return new TransactionResponseDTO(fromAccountNumber,toAccountNumber,fromOwnerName,toOwnerName,transaction.getAmount(),transaction.getType().name(),transaction.getStatus().name(),transaction.getTimestamp());
     }
 
+    private User getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication == null || !authentication.isAuthenticated()){
+            throw new RuntimeException("Utilizatorul nu este autentificat");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if(principal instanceof CustomUserDetails){
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
+            return userDetails.getUser();
+        }
+
+        throw new RuntimeException("Utilizatorul nu a putut fi identificat");
+    }
+
     @Transactional
     public TransactionResponseDTO deposit(TransactionRequestDTO dto){
 
@@ -54,6 +72,12 @@ public class TransactionService {
         }
 
         Account toAccount = accountService.findAccountByNumber(dto.getToAccountNumber());
+
+        User user = getCurrentUser();
+        if(!user.getCnp().equals(toAccount.getUser().getCnp()) && !user.getRole().equals(Role.ADMIN)){
+            throw new RuntimeException("Nu aveti permisiunea de a depune bani in acest cont");
+        }
+
 
         Transaction transaction = new Transaction(null,toAccount,dto.getAmount(), TransactionType.DEPOSIT,TransactionStatus.COMPLETED);
         transactionRepository.save(transaction);
@@ -71,6 +95,13 @@ public class TransactionService {
         }
 
         Account fromAccount = accountService.findAccountByNumber(dto.getFromAccountNumber());
+
+        User user = getCurrentUser();
+        if(!user.getCnp().equals(fromAccount.getUser().getCnp()) && !user.getRole().equals(Role.ADMIN)){
+            throw new RuntimeException("Nu aveti permisiunea de a retrage bani din acest cont");
+        }
+
+
         if(fromAccount.getBalance().compareTo(dto.getAmount()) <0){
             throw new RuntimeException("Fonduri insuficiente");
         }
@@ -95,6 +126,12 @@ public class TransactionService {
         Account fromAccount = accountService.findAccountByNumber(dto.getFromAccountNumber());
         Account toAccount= accountService.findAccountByNumber(dto.getToAccountNumber());
 
+        User user = getCurrentUser();
+        if(!user.getCnp().equals(fromAccount.getUser().getCnp()) && !user.getRole().equals(Role.ADMIN)){
+            throw new RuntimeException("Nu aveti permisiunea de a transfera bani din acest cont");
+        }
+
+
         if(fromAccount.getBalance().compareTo(dto.getAmount()) <0){
             throw new RuntimeException("Fonduri insuficiente");
         }
@@ -113,7 +150,18 @@ public class TransactionService {
 
     public List<TransactionResponseDTO> getTransactionHistory(String accountNumber){
         Account account = accountService.findAccountByNumber(accountNumber);
+
+        User user = getCurrentUser();
+        if(!user.getCnp().equals(account.getUser().getCnp()) && !user.getRole().equals(Role.ADMIN)){
+            throw new RuntimeException("Nu aveti permisiunea de a vizualiza istoricul tranzactiilor acestui cont");
+        }
+
         Long id = account.getId();
         return transactionRepository.findByFromAccountIdOrToAccountIdOrderByTimestampDesc(id,id).stream().map(this::converToDto).collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<TransactionResponseDTO> getAllTransactionsForAdmin(){
+        return transactionRepository.findAll().stream().map(this::converToDto).collect(Collectors.toList());
     }
 }

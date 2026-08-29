@@ -17,12 +17,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public UserResponseDTO createUser(@Valid @RequestBody UserCreateDTO dto){
-        return userService.createUser(dto);
-    }
-
-    @GetMapping
+    @GetMapping("/admin/all")
     public List<UserResponseDTO> findAllUsers(){ return userService.findAllUsers();}
 
     @GetMapping("/cnp/{cnp}")

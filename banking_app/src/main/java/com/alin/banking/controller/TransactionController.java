@@ -35,4 +35,9 @@ public class TransactionController {
     public List<TransactionResponseDTO> transactionHistory(@PathVariable String accountNumber){
         return transactionService.getTransactionHistory(accountNumber);
     }
+
+    @GetMapping("/admin/all")
+    public List<TransactionResponseDTO> getAllTransactionsForAdmin(){
+        return transactionService.getAllTransactionsForAdmin();
+    }
 }
