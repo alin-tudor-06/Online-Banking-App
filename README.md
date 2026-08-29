@@ -252,7 +252,7 @@ src/
 
 ## Author
 
-Alin Tudor – GitHub: https://github.com/alin-tudor-06
+Constantin-Alin Tudor – GitHub: https://github.com/alin-tudor-06
 
 ## License
 This project is intended solely for learning and personal development purposes.
